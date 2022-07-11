@@ -2,73 +2,13 @@
 import pygame
 import math
 import time
+from Slot_Class import Slot
 
 pygame.init()
 WIDTH = 600
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption('Tic-Tac-Toe')
 clock = pygame.time.Clock()
-
-class Slot:
-    def __init__(self, disp, row, col, width, height ):
-        self.disp = disp
-        self.row = row
-        self.col = col
-        self.x = col*width
-        self.y = row*height
-        self.width = width
-        self.height = height
-
-    def isX(self):
-        return self.disp == 'x' 
- 
-    def isO(self):
-        return self.disp == 'o'
-
-    def make_X(self):
-        self.disp = 'x'
-
-    def make_O(self):
-        self.disp = 'o'
-
-    def reset(self):
-        self.disp = ' '
-
-    def draw(self, win):
-           pygame.draw.rect(win, (250,250,250), (self.x,self.y,self.width,self.height))
-        
-    def draw_X(self, win):
-           pygame.draw.rect(win, (250,250,250), (self.x,self.y,self.width,self.height)) 
-           pygame.draw.line(win, (0,0,0), (self.x,self.y), (self.x+self.width, self.y+self.height), 5)
-           pygame.draw.line(win, (0,0,0), (self.x+self.width,self.y), (self.x, self.y+self.height), 5)
-
-    def draw_O(self, win):
-           pygame.draw.rect(win, (250,250,250), (self.x,self.y,self.width,self.height))
-           pygame.draw.circle(win, (0,0,0), (self.x+self.width//2,self.y+self.height//2), self.width//2-5, 2) 
-
-    def __lt__(self, other):
-        return False
-
-def get_clicked_pos(pos, rows, width):
-	gap = width // rows
-	y, x = pos
-
-	row = y // gap
-	col = x // gap
-
-	return row, col
-
-WHITE = (255, 255, 255)
-
-def make_grid(rows, width):
-    grid = []
-    gap = width//rows
-    for i in range(rows):
-        grid.append([])
-        for j in range(rows):
-           slot = Slot(' ',i,j,gap,gap)
-           grid[i].append(slot)
-    return grid,gap
 
 def make_grid(rows, width):
     grid = []
@@ -171,8 +111,6 @@ def winner(grid, rows):
     return winn,playerWon
 
 
-
-
 def winner_coordinates(grid):
     n = len(grid)
     for i in range(n):
@@ -189,7 +127,10 @@ def winner_coordinates(grid):
 
 def draw_winner_text(win,width,player_won):
     font = pygame.font.Font('freesansbold.ttf',45)
-    textRun = font.render(player_won + '  has won ba', True, (250,250,240))
+    if player_won == 'tie':
+        textRun = font.render('The game is tied', True, (250,250,240))
+    else:
+        textRun = font.render(player_won + '  has won ba', True, (250,250,240))
     textRect = textRun.get_rect()
     textRect.center = ( width//4-65+(2*width//4+105)//2, width//4+width//4 )
     win.blit(textRun,textRect)
